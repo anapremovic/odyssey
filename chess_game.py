@@ -1,7 +1,7 @@
 import chess
 from stockfish import Stockfish
 
-termination_flag: str = "DONE"
+TERMINATION_FLAG: str = "DONE"
 STOCKFISH_EXE_PATH: str = "stockfish-windows-x86-64-avx2.exe"
 
 class ChessGame:
@@ -16,7 +16,7 @@ class ChessGame:
             user_move = input("Enter your move: ")
 
             stockfish_move = self.handle_user_move(user_move)
-            if stockfish_move == termination_flag:
+            if stockfish_move == TERMINATION_FLAG:
                 break
 
     def handle_user_move(self, move: str) -> str:
@@ -30,14 +30,14 @@ class ChessGame:
 
         if self.board.is_game_over():
             self.game_over()
-            return termination_flag
+            return TERMINATION_FLAG
 
         stockfish_move = self.board.push_uci(self.get_stockfish_move())
         print(f"Stockfish played {stockfish_move}")
 
         if self.board.is_game_over():
             self.game_over()
-            return termination_flag
+            return TERMINATION_FLAG
 
         return str(stockfish_move)
 
