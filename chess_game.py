@@ -1,6 +1,7 @@
 import chess
 import random
 
+termination_flag: str = "DONE"
 
 class ChessGame:
     def __init__(self) -> None:
@@ -12,7 +13,7 @@ class ChessGame:
             user_move = input("Enter your move: ")
 
             stockfish_move = self.handle_user_move(user_move)
-            if stockfish_move == "DONE":
+            if stockfish_move == termination_flag:
                 break
 
     def handle_user_move(self, move: str) -> str:
@@ -26,7 +27,7 @@ class ChessGame:
 
         if self.board.is_game_over():
             self.game_over()
-            return "Done"
+            return termination_flag
 
         stockfish_move = self.get_stockfish_move()
         self.board.push(stockfish_move)
@@ -34,7 +35,7 @@ class ChessGame:
 
         if self.board.is_game_over():
             self.game_over()
-            return "Done"
+            return termination_flag
 
         return str(stockfish_move)
 
