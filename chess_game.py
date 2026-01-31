@@ -8,6 +8,7 @@ class ChessGame:
         self.board = chess.Board()
 
     def play_chess(self) -> None:
+        """Test function for running chess inside this module"""
         while True:
             print(self.board)
             user_move = input("Enter your move: ")
