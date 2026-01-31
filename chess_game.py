@@ -1,11 +1,13 @@
 import chess
-import random
+from stockfish import Stockfish
 
 termination_flag: str = "DONE"
+STOCKFISH_EXE_PATH: str = "stockfish-windows-x86-64-avx2.exe"
 
 class ChessGame:
     def __init__(self) -> None:
         self.board = chess.Board()
+        self.stockfish = Stockfish(path=STOCKFISH_EXE_PATH)
 
     def play_chess(self) -> None:
         """Test function for running chess inside this module"""
@@ -30,8 +32,7 @@ class ChessGame:
             self.game_over()
             return termination_flag
 
-        stockfish_move = self.get_stockfish_move()
-        self.board.push(stockfish_move)
+        stockfish_move = self.board.push_uci(self.get_stockfish_move())
         print(f"Stockfish played {stockfish_move}")
 
         if self.board.is_game_over():
@@ -40,10 +41,9 @@ class ChessGame:
 
         return str(stockfish_move)
 
-    def get_stockfish_move(self) -> chess.Move:
-        # Temporarily return a random move
-        legal_moves = list(self.board.legal_moves)
-        return random.choice(legal_moves)
+    def get_stockfish_move(self) -> str:
+        self.stockfish.set_fen_position(self.board.fen())
+        return self.stockfish.get_best_move()
 
     def game_over(self) -> None:
         print("Thanks for playing\n")
