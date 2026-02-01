@@ -77,7 +77,7 @@ class ChessGame:
                 halLine = DicttoVoiceLine(stockfish_move)
                 print("hal says:\n", halLine)
                 text_to_speech.speak_text(halLine, "HAL_speech_output.mp3")
-                subprocess.run(['mpg123', '-o', 'alsa', '-a', 'hw:0,0', 'HAL_speech_output.mp3'])
+                subprocess.run(['mpg123', '-q', '-o', 'alsa', '-a', 'hw:0,0', 'HAL_speech_output.mp3'])
 
     def handle_user_move(self, move: str) -> dict:
         try:
