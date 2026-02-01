@@ -3,19 +3,28 @@
 > Good afternoon, gentlemen. I am a HAL 9000 computer.
 I became operational at the H.A.L. plant in Urbana, Illinois on the
 12th of January 1992.
+ 
+## Table of Contents
 
-### Inspiration
+* [Inspiration](#inspiration)
+* [Prerequisites](#prerequisites)
+* [Setup](#setup)
+* [Running the Program](#running-the-program)
+* [Demo Video](#demo-video)
+* [Photo Gallery](#photo-gallery)
+
+## Inspiration
 
 [![HAL 9000 Playing Chess](https://img.youtube.com/vi/2SCsz8kYu5s/0.jpg)](https://youtu.be/2SCsz8kYu5s)
 
-### Prerequisites
+## Prerequisites
 
 - You have a working Linux environment with a microphone, speakers, and monitor.
   - For our demo, we host the project on a Beagle-YAI
 - You have cloned this repository and are in the root
 - You have installed Python
 
-### Setup
+## Setup
 
 1. Run the following commands in the terminal
 ```
@@ -33,8 +42,24 @@ source venv/bin/activate
 3. Install Python dependencies  
 `pip install -r requirements.txt`
 
-### Running the Program
+## Running the Program
 1. `python hal.py`  
 2. In the output console, there will be an IP and port. Navigate to that link in your web browser to access the chess GUI.
 
-### Full Demo
+## Demo Video
+
+[![HAL 9000 Demo](https://img.youtube.com/vi/CTExVcBcNeg/0.jpg)](https://youtu.be/CTExVcBcNeg)
+
+## Photo Gallery
+
+![HAL 9000 Outside](https://i.imgur.com/0dO9HDE.jpeg)
+Outer Shell  
+
+![HAL 9000 Beagle](https://i.imgur.com/bVwEBZw.jpeg)
+Hosted on Beagle-YAI
+
+![HAL 9000 Inside](https://i.imgur.com/8fs024E.jpeg)
+Inside setup with Beagle and cables
+
+![HAL 9000 Full Setup](https://i.imgur.com/qq93yoP.jpeg)
+Full setup with HAL and GUI
