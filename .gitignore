@@ -208,3 +208,6 @@ __marimo__/
 
 # Stockfish
 stockfish-windows-x86-64-avx2.exe
+
+# Flask
+static/
