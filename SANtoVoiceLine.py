@@ -1,5 +1,5 @@
 from google import genai
-import os
+import os, subprocess
 import text_to_speech
 
 GEMINI_API_KEY = ''
@@ -63,3 +63,6 @@ for move in moves:
 # --- Speak Output ___
 text_to_speech.speak_text(line, "HAL_speech_output.wav")
 print(line)
+
+# --- Play file
+subprocess.run(['aplay', 'HAL_speech_output.wav'])
