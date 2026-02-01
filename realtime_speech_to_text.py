@@ -1,14 +1,25 @@
 import speech_recognition as sr
 import time
 from typing import Callable, Optional
-
+import os
+import sys
 
 class SpeechToText:
     def __init__(self) -> None:
         self.recognizer = sr.Recognizer()
+
+        # Suppress ALSA/JACK errors
+        devnull = open(os.devnull, 'w')
+        old_stderr = os.dup(2)
+        os.dup2(devnull.fileno(), 2)
+
         self.microphone = sr.Microphone(device_index=self.get_snowball_microphone_index(),
                                         sample_rate=48000,
                                         chunk_size=1024)
+
+        os.dup2(old_stderr, 2)
+        os.close(old_stderr)
+        devnull.close()
 
     def get_snowball_microphone_index(self) -> Optional[int]:
         for index, name in enumerate(sr.Microphone.list_microphone_names()):
