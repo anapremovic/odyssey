@@ -2,8 +2,7 @@ from google import genai
 import os, subprocess
 import text_to_speech
 
-GEMINI_API_KEY = 'AIzaSyCuLQ4ohtUjhp8WaP2wRP0kkayXUNCtwDo'
-client = genai.Client(api_key=os.getenv(GEMINI_API_KEY))
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 # --- System prompt for HAL 9000 style ---
 system_prompt = """
