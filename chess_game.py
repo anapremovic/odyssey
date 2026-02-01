@@ -6,12 +6,14 @@ import threading
 from flask import Flask
 import logging
 from time import sleep
+import socket
 
 TERMINATION_FLAG: str = "DONE"
 STOCKFISH_EXE_PATH: str = "stockfish-windows-x86-64-avx2.exe"
 chess_web_app = Flask(__name__)
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
+PORT = 5000
 
 @chess_web_app.route('/')
 def index():
@@ -31,7 +33,18 @@ def index():
     """
 
 def run_web_app():
-    chess_web_app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
+    chess_web_app.run(host='0.0.0.0', port=PORT, debug=False, use_reloader=False)
+
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(('10.255.255.255', 1))
+        IP = s.getsockname()[0]
+    except OSError:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
 
 class ChessGame:
     def __init__(self) -> None:
@@ -96,6 +109,9 @@ class ChessGame:
 if __name__ == "__main__":
     ui_thread = threading.Thread(target=run_web_app, daemon=True)
     ui_thread.start()
+
+    ip = get_ip()
+    print(f"Starting server on {ip}:{PORT}")
 
     chess_game = ChessGame()
     chess_game.play_chess()
