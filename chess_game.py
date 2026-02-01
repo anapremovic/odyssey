@@ -79,7 +79,7 @@ class ChessGame:
                 print("hal says:\n", halLine)
                 text_to_speech.speak_text(halLine, "HAL_speech_output.mp3")
                 #subprocess.run(['mpg123', 'HAL_speech_output.mp3'])
-                playsound('HAL_speech_output.mp3')
+                playsound('HAL_speech_output.mp3', block=False)
 
     def handle_user_move(self, move: str) -> dict:
         try:
