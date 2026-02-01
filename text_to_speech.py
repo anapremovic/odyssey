@@ -1,13 +1,27 @@
-import asyncio
-import edge_tts
+from elevenlabs.client import ElevenLabs
+from elevenlabs import VoiceSettings
+import os
 
 INPUT_TEXT = "I'm afraid I can't do that, Dave."
-VOICE = "en-US-EricNeural"
-OUTPUT_FILE = "test.wav"
+VOICE_ID = "pNInz6obpgDQGcFmaJgB"
+OUTPUT_FILE = "speech_output.wav"
 
-async def amain() -> None:
-    communicate = edge_tts.Communicate(INPUT_TEXT, VOICE)
-    await communicate.save(OUTPUT_FILE)
+client = ElevenLabs(api_key=os.getenv("ELEVENLABS_API_KEY"))
 
-if __name__ == "__main__":
-    asyncio.run(amain())
+def speak(text, output_file, emotion_level=0.4):
+    audio = client.text_to_speech.convert(
+        VOICE_ID, 
+        text=text,
+        voice_settings=VoiceSettings(
+            stability=emotion_level,  
+            similarity_boost=0.75,
+            style=0.3,
+            use_speaker_boost=True
+        )
+    )
+    
+    with open(output_file, "wb") as f:
+        for chunk in audio:
+            f.write(chunk)
+
+speak(INPUT_TEXT, OUTPUT_FILE, emotion_level=0.4)
