@@ -52,14 +52,26 @@ source venv/bin/activate
 
 ## Photo Gallery
 
-![HAL 9000 Outside](https://i.imgur.com/0dO9HDE.jpeg)
-Outer Shell  
+<p>
+  <img src="https://i.imgur.com/0dO9HDE.jpeg" width="500">
+  <br>
+  <b>Outer Shell</b>
+</p>
 
-![HAL 9000 Beagle](https://i.imgur.com/bVwEBZw.jpeg)
-Hosted on Beagle-YAI
+<p>
+  <img src="https://i.imgur.com/bVwEBZw.jpeg" width="500">
+  <br>
+  <b>Hosted on Beagle-YAI</b>
+</p>
 
-![HAL 9000 Inside](https://i.imgur.com/8fs024E.jpeg)
-Inside setup with Beagle and cables
+<p>
+  <img src="https://i.imgur.com/8fs024E.jpeg" width="500">
+  <br>
+  <b>Inside setup with Beagle and cables</b>
+</p>
 
-![HAL 9000 Full Setup](https://i.imgur.com/qq93yoP.jpeg)
-Full setup with HAL and GUI
+<p>
+  <img src="https://i.imgur.com/qq93yoP.jpeg" width="500">
+  <br>
+  <b>Full setup with HAL and GUI</b>
+</p>
