@@ -7,7 +7,7 @@ import os
 import sys
 
 INPUT_TEXT = "Hello World."
-VOICE_ID = "pNInz6obpgDQGcFmaJgB"
+VOICE_ID = "Ak8Eltxy6be7fnMwVCCe"
 OUTPUT_FILE = "speech_output.wav"
 
 client = ElevenLabs(api_key=os.getenv("ELEVENLABS_API_KEY"))
