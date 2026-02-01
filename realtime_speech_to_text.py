@@ -28,7 +28,7 @@ class SpeechToText:
         print("Start listening")
         return self.recognizer.listen_in_background(self.microphone, self.background_thread_speech_to_text)
 
-    def background_thread_speech_to_text(self, audio: sr.AudioData) -> None:
+    def background_thread_speech_to_text(self, recognizer: sr.Recognizer, audio: sr.AudioData) -> None:
         try:
             text: str = self.recognizer.recognize_google(audio)
             print(f"\n[Voice Command]: {text}")
