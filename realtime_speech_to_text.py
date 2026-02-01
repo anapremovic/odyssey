@@ -1,6 +1,8 @@
 import speech_recognition as sr
 import time
 from typing import Callable, Optional
+from faster_whisper import WhisperModel
+import numpy as np
 
 
 class SpeechToText:
@@ -9,6 +11,7 @@ class SpeechToText:
         self.microphone = sr.Microphone(device_index=self.get_snowball_microphone_index(),
                                         sample_rate=16000,
                                         chunk_size=1024)
+        self.model = WhisperModel("tiny", device="cpu")
 
     def get_snowball_microphone_index(self) -> Optional[int]:
         for index, name in enumerate(sr.Microphone.list_microphone_names()):
@@ -30,7 +33,10 @@ class SpeechToText:
 
     def background_thread_speech_to_text(self, recognizer: sr.Recognizer, audio: sr.AudioData) -> None:
         try:
-            text: str = self.recognizer.recognize_google(audio)
+            audio_data = audio.get_raw_data(convert_rate=16000)
+            audio_array = np.frombuffer(audio_data, dtype=np.int16).astype(np.float32) / 32768.0
+            transcribed_audio_data, _ = self.model.transcribe(audio_array, language="en")
+            text = " ".join(part.text for part in transcribed_audio_data).strip()
             print(f"\n[Voice Command]: {text}")
         except sr.UnknownValueError:
             print("No words parsed")
