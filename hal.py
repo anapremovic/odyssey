@@ -47,7 +47,7 @@ def run_hall():
             halLine = DicttoVoiceLine(dictionaries)
             print("HAL says:\n", halLine)
             text_to_speech.speak_text(halLine, "HAL_speech_output.mp3")
-            subprocess.run(['mpg123', '-q', '-o', 'alsa', '-a', 'hw:0,0', 'HAL_speech_output.mp3'])
+            subprocess.run(['mpg123', 'HAL_speech_output.mp3'])
 
     stt = SpeechToText(handle_text_event=process_one_turn)
     stop_listening = stt.start_background_listening()
