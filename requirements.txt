@@ -4,3 +4,5 @@ flask
 
 elevenlabs
 google
+SpeechToText
+faster-whisper
