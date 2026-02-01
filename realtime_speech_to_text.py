@@ -1,17 +1,32 @@
+# ----------------------- SILENCE ALSA / JACK ERRORS -----------------------
+import os
+
+devnull = os.open(os.devnull, os.O_WRONLY)
+os.dup2(devnull, 2)
+os.close(devnull)
+os.environ["JACK_NO_START_SERVER"] = "1"
+# ---------------------------------------------------------------------------
+
 import speech_recognition as sr
 import time
 from typing import Callable, Optional
 from faster_whisper import WhisperModel
 import numpy as np
+import threading
 
 
 class SpeechToText:
-    def __init__(self) -> None:
+    def __init__(self, handle_text_event: Callable[[str], None]) -> None:
         self.recognizer = sr.Recognizer()
         self.microphone = sr.Microphone(device_index=self.get_snowball_microphone_index(),
                                         sample_rate=16000,
                                         chunk_size=1024)
         self.fallback_model = WhisperModel("tiny", device="cpu")
+
+        # output event logic
+        self.handle_text_event = handle_text_event
+        self.ready_to_handle_new_audio = threading.Event()
+        self.ready_to_handle_new_audio.set()
 
     def get_snowball_microphone_index(self) -> Optional[int]:
         for index, name in enumerate(sr.Microphone.list_microphone_names()):
@@ -32,9 +47,12 @@ class SpeechToText:
         return self.recognizer.listen_in_background(self.microphone, self.background_thread_speech_to_text)
 
     def background_thread_speech_to_text(self, recognizer: sr.Recognizer, audio: sr.AudioData) -> None:
+        # blocks if not set
+        self.ready_to_handle_new_audio.wait()
+
         try:
             text: str = self.recognizer.recognize_google(audio)
-            print(f"\n[Voice Command]: {text}")
+            self.send_text_to_main_thread(text)
         except sr.UnknownValueError:
             print("Could not parse")
         except sr.RequestError as e:
@@ -47,20 +65,20 @@ class SpeechToText:
             audio_array = np.frombuffer(audio_data, dtype=np.int16).astype(np.float32) / 32768.0
             transcribed_audio_data, _ = self.fallback_model.transcribe(audio_array, language="en")
             text = " ".join(part.text for part in transcribed_audio_data).strip()
-            print(f"\n[Voice Command]: {text}")
+            self.send_text_to_main_thread(text)
         except sr.UnknownValueError:
             print("Could not parse")
         except sr.RequestError as e:
             print(f"Speech to Text Service error: {e}")
 
+    def send_text_to_main_thread(self, text: str) -> None:
+        # block incoming audio
+        self.ready_to_handle_new_audio.clear()
 
-if __name__ == "__main__":
-    stt = SpeechToText()
-    stop_listening = stt.start_background_listening()
-
-    try:
-        while True:
-            time.sleep(0.1)
-    except KeyboardInterrupt:
-        # Terminate background thread
-        stop_listening(wait_for_stop=False)
+        try:
+            # process text in main thread
+            print(f"\n[Voice Command]: {text}")
+            self.handle_text_event(text)
+        finally:
+            # stop blocking
+            self.ready_to_handle_new_audio.set()

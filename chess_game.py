@@ -52,6 +52,11 @@ def get_ip():
 
 class ChessGame:
     def __init__(self) -> None:
+        ui_thread = threading.Thread(target=run_web_app, daemon=True)
+        ui_thread.start()
+        ip = get_ip()
+        print(f"Starting server on {ip}:{PORT}")
+
         self.board = chess.Board()
         self.stockfish = Stockfish(path=STOCKFISH_EXE_PATH)
         if not os.path.exists('static'):
@@ -160,11 +165,11 @@ class ChessGame:
 
 
 if __name__ == "__main__":
-    ui_thread = threading.Thread(target=run_web_app, daemon=True)
-    ui_thread.start()
+    ui_thread_external = threading.Thread(target=run_web_app, daemon=True)
+    ui_thread_external.start()
 
-    ip = get_ip()
-    print(f"Starting server on {ip}:{PORT}")
+    ip_external = get_ip()
+    print(f"Starting server on {ip_external}:{PORT}")
 
     chess_game = ChessGame()
     chess_game.play_chess()
