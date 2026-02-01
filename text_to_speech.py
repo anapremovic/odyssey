@@ -12,7 +12,7 @@ OUTPUT_FILE = "speech_output.wav"
 
 client = ElevenLabs(api_key=os.getenv("ELEVENLABS_API_KEY"))
 
-def speak_text(text, output_file="speech_output.wav", emotion_level=0.4):
+def speak_text(text, output_file="speech_output.mp3", emotion_level=0.4):
     audio = client.text_to_speech.convert(
         VOICE_ID, 
         text=text,
@@ -21,8 +21,7 @@ def speak_text(text, output_file="speech_output.wav", emotion_level=0.4):
             similarity_boost=0.75,
             style=0.3,
             use_speaker_boost=True
-        ),
-        output_format="pcm_32000"
+        )
     )
     
     with open(output_file, "wb") as f:

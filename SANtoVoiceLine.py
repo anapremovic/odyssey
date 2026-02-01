@@ -61,8 +61,8 @@ for move in moves:
 
 
 # --- Speak Output ___
-text_to_speech.speak_text(line, "HAL_speech_output.wav")
+text_to_speech.speak_text(line, "HAL_speech_output.mp3")
 print(line)
 
 # --- Play file
-subprocess.run(['aplay', 'HAL_speech_output.wav'])
+subprocess.run(['mpg123', 'HAL_speech_output.mp3'])
