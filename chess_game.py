@@ -7,6 +7,7 @@ from flask import Flask
 import logging
 from time import sleep
 import socket
+import json 
 
 TERMINATION_FLAG: str = "DONE"
 STOCKFISH_EXE_PATH: str = "/usr/games/stockfish"
@@ -53,6 +54,7 @@ class ChessGame:
         if not os.path.exists('static'):
             os.makedirs('static')
         self.update_ui()
+        self.last_move_san = None
 
     def play_chess(self) -> None:
         """Test function for running chess inside this module"""
@@ -64,31 +66,59 @@ class ChessGame:
             if stockfish_move == TERMINATION_FLAG:
                 break
 
-    def handle_user_move(self, move: str) -> str:
+    def handle_user_move(self, move: str) -> dict:
         """Returns Stockfish move"""
         try:
-            played_move = self.board.push_uci(move)
-            print(f"You played {played_move}")
+            move_obj = chess.Move.from_uci(move)
+            if move_obj not in self.board.legal_moves:
+                print(f"{move} is invalid")
+                return TERMINATION_FLAG
+            
+            user_san = self.board.san(move_obj)
+            self.last_move_san = user_san
+            played_move = self.board.push(move_obj)
+            print(f"You played {user_san}")
 
             self.update_ui()
             sleep(0.5) # stall before Stockfish turn
         except ValueError:
             print(f"{move} is invalid")
             return ""
+        
+        user_data = self.get_game_data()
+        print("\n" + "="*60)
+        print("="*60)
+        print(json.dumps(user_data, indent=2))
+        print("="*60 + "\n")
 
         if self.board.is_game_over():
             self.game_over()
             return TERMINATION_FLAG
 
-        stockfish_move = self.board.push_uci(self.get_stockfish_move())
-        print(f"Stockfish played {stockfish_move}")
+        stockfish_uci = self.get_stockfish_move()
+        stockfish_move_obj = chess.Move.from_uci(stockfish_uci)
+
+        stockfish_san = self.board.san(stockfish_move_obj)
+        self.last_move_san = stockfish_san
+
+        self.board.push(stockfish_move_obj)
+        print(f"Stockfish played {stockfish_san}")
         self.update_ui()
 
         if self.board.is_game_over():
             self.game_over()
             return TERMINATION_FLAG
 
-        return str(stockfish_move)
+        stockfish_data = self.get_game_data()
+        print("\n" + "="*60)
+        print("="*60)
+        print(json.dumps(stockfish_data, indent=2))
+        print("="*60 + "\n")
+
+        return {
+            'user': user_data, 
+            'stockfish': stockfish_data
+            }
 
     def get_stockfish_move(self) -> str:
         self.stockfish.set_fen_position(self.board.fen())
@@ -104,6 +134,20 @@ class ChessGame:
         board_svg = chess.svg.board(self.board, size=800, lastmove=last_move)
         with open("static/board.svg", "w") as f:
             f.write(board_svg)
+    
+    def get_game_data(self) -> dict:
+
+        fen = self.board.fen()
+        last_move_san = self.last_move_san
+
+        self.stockfish.set_fen_position(fen)
+        eval_data = self.stockfish.get_evaluation()
+
+        return {
+            "fen": fen,
+            "last_move": last_move_san,
+            "evaluation": eval_data
+        }
 
 
 if __name__ == "__main__":
