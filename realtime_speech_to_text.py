@@ -41,7 +41,7 @@ class SpeechToText:
             print("Calibrating to background noise...")
             self.recognizer.adjust_for_ambient_noise(source, duration=2)
         self.recognizer.pause_threshold = 1.0
-        self.recognizer.dynamic_energy_threshold = True
+        self.recognizer.dynamic_energy_threshold = False
 
         print("Start listening")
         return self.recognizer.listen_in_background(self.microphone, self.background_thread_speech_to_text)
