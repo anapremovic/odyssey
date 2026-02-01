@@ -1,3 +1,6 @@
 chess
 stockfish
 flask
+
+elevenlabs
+google
