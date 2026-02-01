@@ -27,5 +27,3 @@ def speak_text(text, output_file="speech_output.mp3", emotion_level=0.4):
     with open(output_file, "wb") as f:
         for chunk in audio:
             f.write(chunk)
-
-speak_text(INPUT_TEXT, OUTPUT_FILE, emotion_level=0.4)
