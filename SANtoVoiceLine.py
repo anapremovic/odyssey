@@ -1,2 +1,1 @@
-def SANtoVoiceLine(text: str):
-    
+def SANtoVoiceLine(text: str) -> str:
