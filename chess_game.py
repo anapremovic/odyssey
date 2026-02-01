@@ -96,10 +96,10 @@ class ChessGame:
         sleep(0.5)  # stall before Stockfish turn
 
         user_data = self.get_game_data()
-        print("\n" + "="*60)
-        print("="*60)
-        print(json.dumps(user_data, indent=2))
-        print("="*60 + "\n")
+        # print("\n" + "="*60)
+        # print("="*60)
+        # print(json.dumps(user_data, indent=2))
+        # print("="*60 + "\n")
 
         if self.board.is_game_over():
             self.game_over()
@@ -120,10 +120,10 @@ class ChessGame:
             return TERMINATION_FLAG
 
         stockfish_data = self.get_game_data()
-        print("\n" + "="*60)
-        print("="*60)
-        print(json.dumps(stockfish_data, indent=2))
-        print("="*60 + "\n")
+        # print("\n" + "="*60)
+        # print("="*60)
+        # print(json.dumps(stockfish_data, indent=2))
+        # print("="*60 + "\n")
 
         return {
             'user': user_data,
