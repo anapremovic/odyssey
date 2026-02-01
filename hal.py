@@ -1,11 +1,17 @@
 from realtime_speech_to_text import SpeechToText
 import time
+from NLtoSANParser import parse
+from chess_game import ChessGame
 
-def parse_natural_language(text: str):
-    print(f"Natural language: {text}")
 
 def run_hall():
-    stt = SpeechToText(handle_text_event=parse_natural_language)
+    chess_engine = ChessGame()
+    def process_one_turn(text: str) -> None:
+        user_move_san = parse(text)
+        dictionaries = chess_engine.handle_user_move(user_move_san)
+        print(dictionaries)
+
+    stt = SpeechToText(handle_text_event=process_one_turn)
     stop_listening = stt.start_background_listening()
 
     try:
