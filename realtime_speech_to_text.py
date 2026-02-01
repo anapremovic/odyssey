@@ -1,12 +1,20 @@
 import speech_recognition as sr
 import time
-from typing import Callable
+from typing import Callable, Optional
 
 
 class SpeechToText:
     def __init__(self) -> None:
         self.recognizer = sr.Recognizer()
-        self.microphone = sr.Microphone(sample_rate=48000)
+        self.microphone = sr.Microphone(device_index=self.get_snowball_microphone_index(),
+                                        sample_rate=48000,
+                                        chunk_size=1024)
+
+    def get_snowball_microphone_index(self) -> Optional[int]:
+        for index, name in enumerate(sr.Microphone.list_microphone_names()):
+            if "Snowball" in name:
+                return index
+        return None
 
     def start_background_listening(self) -> Callable[[bool], None]:
         """Configure listening and start background tread.
@@ -17,6 +25,7 @@ class SpeechToText:
         self.recognizer.pause_threshold = 1.0
         self.recognizer.dynamic_energy_threshold = True
 
+        print("Start listening")
         return self.recognizer.listen_in_background(self.microphone, self.background_thread_speech_to_text)
 
     def background_thread_speech_to_text(self, audio: sr.AudioData) -> None:
