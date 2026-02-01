@@ -1,5 +1,6 @@
 from google import genai
 import os
+import text_to_speech
 
 GEMINI_API_KEY = ''
 client = genai.Client(api_key=os.getenv(GEMINI_API_KEY))
@@ -54,6 +55,11 @@ moves = [
 ]
 
 # --- Run moves through HAL ---
+line = ""
 for move in moves:
-    line = SANtoVoiceLine(move["SAN"], move["FEN"], move["eval"])
-    print(line)
+    line = line + SANtoVoiceLine(move["SAN"], move["FEN"], move["eval"]) + "\n"
+
+
+# --- Speak Output ___
+text_to_speech.speak_text(line, "HAL_speech_output.wav")
+print(line)
