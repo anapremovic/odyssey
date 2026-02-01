@@ -11,7 +11,6 @@ import json
 from SANtoVoiceLine import DicttoVoiceLine
 import text_to_speech
 import subprocess
-from playsound3 import playsound
 
 TERMINATION_FLAG: str = "DONE"
 STOCKFISH_EXE_PATH: str = "/usr/games/stockfish"
@@ -78,8 +77,7 @@ class ChessGame:
                 halLine = DicttoVoiceLine(stockfish_move)
                 print("hal says:\n", halLine)
                 text_to_speech.speak_text(halLine, "HAL_speech_output.mp3")
-                #subprocess.run(['mpg123', 'HAL_speech_output.mp3'])
-                playsound('HAL_speech_output.mp3', block=False)
+                subprocess.run(['mpg123', '-o', 'alsa', '-a', 'hw:0,0', 'HAL_speech_output.mp3'])
 
     def handle_user_move(self, move: str) -> dict:
         try:
