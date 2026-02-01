@@ -71,7 +71,7 @@ class ChessGame:
             print(f"You played {played_move}")
 
             self.update_ui()
-            sleep(1) # stall before Stockfish turn
+            sleep(0.5) # stall before Stockfish turn
         except ValueError:
             print(f"{move} is invalid")
             return ""
