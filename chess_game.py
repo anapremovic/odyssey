@@ -74,23 +74,22 @@ class ChessGame:
     def handle_user_move(self, move: str) -> dict:
         try:
             # Support SAN
-            move_obj = self.board.push_san(move)
+            move_obj = self.board.parse_san(move)
         except (ValueError, chess.IllegalMoveError, chess.AmbiguousMoveError):
             try:
                 # Support UCI
-                uci_move = chess.Move.from_uci(move)
-                if uci_move in self.board.legal_moves:
-                    self.board.push(uci_move)
-                    move_obj = uci_move
-                else:
-                    print(f"Move {move} is illegal.")
-                    return TERMINATION_FLAG
+                move_obj = chess.Move.from_uci(move)
             except (ValueError, TypeError):
                 print(f"Move '{move}' is not valid SAN or UCI.")
                 return ""
 
+        if move_obj not in self.board.legal_moves:
+            print(f"Move {move} is illegal.")
+            return TERMINATION_FLAG
+
         user_san = self.board.san(move_obj)
         self.last_move_san = user_san
+        self.board.push(move_obj)
         print(f"You played {user_san}")
 
         self.update_ui()
