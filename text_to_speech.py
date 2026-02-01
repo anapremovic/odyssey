@@ -1,14 +1,22 @@
+# 
+# TTS Program - Generates a speech output (WAV file) of a given string
+# Usage: python text_to_speech.py <input_text>
+# 
 from elevenlabs.client import ElevenLabs
 from elevenlabs import VoiceSettings
 import os
+import sys
 
-INPUT_TEXT = "I'm afraid I can't do that, Dave."
+if len(sys.argv) < 2:
+    print(f"Usage: python {sys.argv[0]} <input_text>")
+    sys.exit(1)
+INPUT_TEXT = sys.argv[1]
 VOICE_ID = "pNInz6obpgDQGcFmaJgB"
 OUTPUT_FILE = "speech_output.wav"
 
 client = ElevenLabs(api_key=os.getenv("ELEVENLABS_API_KEY"))
 
-def speak(text, output_file, emotion_level=0.4):
+def speak(text, output_file="speech_output.wav", emotion_level=0.4):
     audio = client.text_to_speech.convert(
         VOICE_ID, 
         text=text,
