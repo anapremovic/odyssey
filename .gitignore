@@ -213,5 +213,5 @@ stockfish-windows-x86-64-avx2.exe
 static/
 
 # Audio files
-.mp3
-.wav
+*.mp3
+*.wav
