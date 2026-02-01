@@ -1,8 +1,11 @@
 from realtime_speech_to_text import SpeechToText
 import time
 
+def parse_natural_language(text: str):
+    print(f"Natural language: {text}")
+
 def run_hall():
-    stt = SpeechToText()
+    stt = SpeechToText(handle_text_event=parse_natural_language)
     stop_listening = stt.start_background_listening()
 
     try:
