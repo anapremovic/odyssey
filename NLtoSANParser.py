@@ -1,4 +1,5 @@
 import sys
+from typing import Optional
 
 pieceDict = {
     'knight':'N',
@@ -28,16 +29,16 @@ checkDict = {
 validFiles = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'}
 validRanks = {'1', '2', '3', '4', '5', '6', '7', '8'}
 
-def clean(text: str):
+def clean(text: str) -> list[str]:
     return text.lower().strip().split()
 
-def detectPiece(words):
+def detectPiece(words: list[str]) -> str:
     for word in words:
         if word in pieceDict:
             return pieceDict[word]
     return ''
 
-def detectSquare(words):
+def detectSquare(words: list[str]) -> Optional[str]:
 
     import re 
 
@@ -61,19 +62,19 @@ def detectSquare(words):
         return file + rank
     return None 
 
-def detectCapture(words):
+def detectCapture(words: list[str]) -> str:
     for word in words:
         if word in captureDict:
             return captureDict[word]
     return ""
 
-def detectCheck(words):
+def detectCheck(words: list[str]) -> str:
     for word in words:
         if word in checkDict:
             return checkDict[word]
     return ""
 
-def parse(text: str):
+def parse(text: str) -> str | None:
 
     words = clean(text)
 
