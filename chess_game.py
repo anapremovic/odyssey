@@ -8,6 +8,9 @@ import logging
 from time import sleep
 import socket
 import json 
+from SANtoVoiceLine import DicttoVoiceLine
+import text_to_speech
+import subprocess
 
 TERMINATION_FLAG: str = "DONE"
 STOCKFISH_EXE_PATH: str = "/usr/games/stockfish"
@@ -70,6 +73,12 @@ class ChessGame:
             stockfish_move = self.handle_user_move(user_move)
             if stockfish_move == TERMINATION_FLAG:
                 break
+            if isinstance(stockfish_move, dict):
+                halLine = DicttoVoiceLine(stockfish_move)
+                print("hal says:\n", halLine)
+                text_to_speech.speak_text(halLine, "HAL_speech_output.mp3")
+                subprocess.run(['mpg123', 'HAL_speech_output.mp3'])
+
 
     def handle_user_move(self, move: str) -> dict:
         try:
