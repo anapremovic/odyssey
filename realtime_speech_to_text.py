@@ -30,7 +30,7 @@ class SpeechToText:
 
     def background_thread_speech_to_text(self, recognizer: sr.Recognizer, audio: sr.AudioData) -> None:
         try:
-            text: str = self.recognizer.recognize_vosk(audio)
+            text: str = self.recognizer.recognize_google(audio)
             print(f"\n[Voice Command]: {text}")
         except sr.UnknownValueError:
             print("No words parsed")

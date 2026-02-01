@@ -2,4 +2,3 @@ chess
 stockfish
 flask
 SpeechToText
-vosk
