@@ -74,6 +74,23 @@ def detectCheck(words: list[str]) -> str:
             return checkDict[word]
     return ""
 
+def detectSourceAndDestination(text: str) -> Optional[tuple[str,str]]:
+    import re
+
+    # Pattern 1: "e4 to e5" or "e4-e5"
+    pattern1 = r'([a-h][1-8])\s*(?:to|-)\s*([a-h][1-8])'
+    match = re.search(pattern1, text.lower())
+    if match:
+        return (match.group(1), match.group(2))
+    
+    # Pattern 2: "e4 e5" (two squares with space)
+    pattern2 = r'\b([a-h][1-8])\s+([a-h][1-8])\b'
+    match = re.search(pattern2, text.lower())
+    if match:
+        return (match.group(1), match.group(2))
+    
+    return None
+
 def parse(text: str) -> str | None:
 
     words = clean(text)
@@ -81,6 +98,17 @@ def parse(text: str) -> str | None:
     for word in words:
         if word in castlingDict:
             return castlingDict[word]
+        
+    source_dest = detectSourceAndDestination(text)
+    if source_dest:
+        source, dest = source_dest
+
+        piece = detectPiece(words)
+        capture = detectCapture(words)
+        check = detectCheck(words)
+
+        san = piece + capture + dest + check
+        return san
 
     piece = detectPiece(words)
     square = detectSquare(words)
