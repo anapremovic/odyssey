@@ -1,8 +1,8 @@
 chess
 stockfish
 flask
-
 elevenlabs
 google
+google-genai
 SpeechToText
 faster-whisper
