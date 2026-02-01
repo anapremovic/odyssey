@@ -9,7 +9,7 @@ from time import sleep
 import socket
 
 TERMINATION_FLAG: str = "DONE"
-STOCKFISH_EXE_PATH: str = "stockfish-windows-x86-64-avx2.exe"
+STOCKFISH_EXE_PATH: str = "/usr/games/stockfish"
 chess_web_app = Flask(__name__)
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
