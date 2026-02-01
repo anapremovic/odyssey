@@ -72,24 +72,30 @@ class ChessGame:
                 break
 
     def handle_user_move(self, move: str) -> dict:
-        """Returns Stockfish move"""
         try:
-            move_obj = chess.Move.from_uci(move)
-            if move_obj not in self.board.legal_moves:
-                print(f"{move} is invalid")
-                return TERMINATION_FLAG
-            
-            user_san = self.board.san(move_obj)
-            self.last_move_san = user_san
-            played_move = self.board.push(move_obj)
-            print(f"You played {user_san}")
+            # Support SAN
+            move_obj = self.board.push_san(move)
+        except (ValueError, chess.IllegalMoveError, chess.AmbiguousMoveError):
+            try:
+                # Support UCI
+                uci_move = chess.Move.from_uci(move)
+                if uci_move in self.board.legal_moves:
+                    self.board.push(uci_move)
+                    move_obj = uci_move
+                else:
+                    print(f"Move {move} is illegal.")
+                    return TERMINATION_FLAG
+            except (ValueError, TypeError):
+                print(f"Move '{move}' is not valid SAN or UCI.")
+                return ""
 
-            self.update_ui()
-            sleep(0.5) # stall before Stockfish turn
-        except ValueError:
-            print(f"{move} is invalid")
-            return ""
-        
+        user_san = self.board.san(move_obj)
+        self.last_move_san = user_san
+        print(f"You played {user_san}")
+
+        self.update_ui()
+        sleep(0.5)  # stall before Stockfish turn
+
         user_data = self.get_game_data()
         print("\n" + "="*60)
         print("="*60)
@@ -121,7 +127,7 @@ class ChessGame:
         print("="*60 + "\n")
 
         return {
-            'user': user_data, 
+            'user': user_data,
             'stockfish': stockfish_data
             }
 
