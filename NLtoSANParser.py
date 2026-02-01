@@ -102,13 +102,8 @@ def parse(text: str) -> str | None:
     source_dest = detectSourceAndDestination(text)
     if source_dest:
         source, dest = source_dest
-
-        piece = detectPiece(words)
-        capture = detectCapture(words)
-        check = detectCheck(words)
-
-        san = piece + capture + dest + check
-        return san
+        uci = source + dest
+        return uci
 
     piece = detectPiece(words)
     square = detectSquare(words)
