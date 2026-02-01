@@ -1,4 +1,4 @@
-# HAL9000 (2001: A Space Odyssey)
+# HAL 9000 (2001: A Space Odyssey)
 
 > Good afternoon, gentlemen. I am a HAL 9000 computer.
 I became operational at the H.A.L. plant in Urbana, Illinois on the
@@ -6,6 +6,7 @@ I became operational at the H.A.L. plant in Urbana, Illinois on the
 
 ### Inspiration
 
+[![HAL 9000 Playing Chess](https://img.youtube.com/vi/2SCsz8kYu5s/0.jpg)](https://youtu.be/2SCsz8kYu5s)
 
 ### Prerequisites
 
