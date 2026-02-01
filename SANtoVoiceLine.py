@@ -1,34 +1,57 @@
 from google import genai
-GEMINI_API_KEY = 'AIzaSyBrZDRsb5UBBQcd37DpdzQX_uLsFKQyxLI'
+GEMINI_API_KEY = ''
 client = genai.Client(api_key=GEMINI_API_KEY)
+
+# --- System prompt for HAL 9000 style ---
 system_prompt = """
-You are HAL 9000, a calm, calculating AI from *2001: A Space Odyssey*. 
-You speak in a calm, measured tone and always remain formal, but with a hint of unsettling precision. 
-Your responses to chess moves should include evaluation and a hint of your unsettling demeanor. 
-Keep it brief to 1-2 lines. Do not mention the evaluation directly but use it to guide the tone of the response. 
-Also say the natural language form of the moves, not the notation, but only mention if it sounds natural in speech.
+You are HAL 9000, a calm, calculating AI from 2001: A Space Odyssey.
+You speak in a calm, measured tone and always remain formal, but with a hint of unsettling precision.
+Your responses to chess moves should be brief (1-2 lines), insightful, and unnervingly precise.
+Do not mention the evaluation directly, but let it guide your tone.
+Use natural language for moves where it sounds natural, otherwise leave notation.
 """
+
+# --- Create a single chat session ---
 chat = client.chats.create(
-    model="gemini-3-flash-preview",
+    model="gemini-2.5-flash-lite",
     config=genai.types.GenerateContentConfig(
         system_instruction=system_prompt
     )
 )
-def SANtoVoiceLine(SAN: str, FEN: str, eval: dict[str, str | int] ) -> str:
-    move_message = f"Move: {SAN}\n"
-    board_message = f"Current board position (FEN): {FEN}\n"
-    eval_message = f"Evaluation: {eval['type']} value: {eval['value']}"
 
-    full_prompt = move_message + board_message + eval_message
+# --- Helper: Convert SAN to natural language ---
+def san_to_spoken(SAN: str) -> str:
+    piece_map = {"K": "king", "Q": "queen", "R": "rook", "B": "bishop", "N": "knight"}
+    if SAN[0] in piece_map:
+        piece = piece_map[SAN[0]]
+        square = SAN[1:3]
+    else:
+        piece = "pawn"
+        square = SAN[0:2]
+    file = square[0]
+    rank = square[1]
+    return f"{piece} to {file} {rank}"
 
-    response = chat.send_message(full_prompt)
-    
+# --- Main function ---
+def SANtoVoiceLine(SAN: str, FEN: str, eval: dict[str, str | int]) -> str:
+    spoken_move = san_to_spoken(SAN)
+    prompt = (
+        f"Move: {SAN} ({spoken_move})\n"
+        f"Current board (FEN): {FEN}\n"
+        f"Evaluation: {eval['type']} {eval['value']}"
+    )
+    response = chat.send_message(prompt)
     return response.text
 
-# Example usage:
-SAN = "e2e4"
-FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-eval = {"type": "cp", "value": 35}
+# --- Example moves ---
+moves = [
+    {"SAN": "e2e4", "FEN": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "eval": {"type":"cp","value":35}},
+    {"SAN": "e7e5", "FEN": "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2", "eval": {"type":"cp","value":20}},
+    {"SAN": "g1f3", "FEN": "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2", "eval": {"type":"cp","value":30}},
+    {"SAN": "b8c6", "FEN": "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3", "eval": {"type":"cp","value":15}}
+]
 
-voice_line = SANtoVoiceLine(SAN, FEN, eval)
-print(voice_line)
+# --- Run moves through HAL ---
+for move in moves:
+    line = SANtoVoiceLine(move["SAN"], move["FEN"], move["eval"])
+    print(line)
