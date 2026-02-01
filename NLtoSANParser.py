@@ -29,6 +29,28 @@ checkDict = {
 validFiles = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'}
 validRanks = {'1', '2', '3', '4', '5', '6', '7', '8'}
 
+phoneticFiles = {
+    'alpha': 'a', 'alfa': 'a', 'aye': 'a', 'ay': 'a',
+    'brava': 'b', 'bee': 'b',
+    'charlie': 'c', 'charley': 'c', 'see': 'c', 'sea': 'c', 
+    'delta': 'd', 'dee': 'd',
+    'echo': 'e', 'ee': 'e',
+    'foxtrot': 'f', 'eff': 'f',
+    'golf': 'g', 'gee': 'g',
+    'hotel': 'h', 'aitch': 'h',
+}
+
+phoneticRanks = {
+    'one': '1',
+    'two': '2',
+    'three': '3',
+    'four': '4',
+    'five': '5',
+    'six': '6',
+    'seven': '7',
+    'eight': '8',
+}
+
 def clean(text: str) -> list[str]:
     return text.lower().strip().split()
 
@@ -52,11 +74,11 @@ def detectSquare(words: list[str]) -> Optional[str]:
     rank = ''
 
     for word in words:
-        for char in word:
-            if char in validFiles and not file:
-                file = char
-            elif char in validRanks and not rank:
-                rank = char
+        if word in phoneticFiles and not file:
+            file = phoneticFiles[word]
+        elif word in phoneticRanks and not rank:
+            rank = phoneticRanks[word]
+
     
     if file and rank:
         return file + rank

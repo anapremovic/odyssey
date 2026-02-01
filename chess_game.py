@@ -160,11 +160,6 @@ class ChessGame:
 
 
 if __name__ == "__main__":
-    ui_thread_external = threading.Thread(target=run_web_app, daemon=True)
-    ui_thread_external.start()
-
-    ip_external = get_ip()
-    print(f"Starting server on {ip_external}:{PORT}")
-
+    
     chess_game = ChessGame()
     chess_game.play_chess()
