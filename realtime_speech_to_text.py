@@ -81,15 +81,3 @@ class SpeechToText:
 
         # stop blocking
         self.ready_to_handle_new_audio.set()
-
-
-if __name__ == "__main__":
-    stt = SpeechToText()
-    stop_listening = stt.start_background_listening()
-
-    try:
-        while True:
-            time.sleep(0.1)
-    except KeyboardInterrupt:
-        # Terminate background thread
-        stop_listening(wait_for_stop=False)
