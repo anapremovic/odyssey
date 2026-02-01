@@ -75,9 +75,10 @@ class SpeechToText:
         # block incoming audio
         self.ready_to_handle_new_audio.clear()
 
-        # process text in main thread
-        print(f"\n[Voice Command]: {text}")
-        self.handle_text_event(text)
-
-        # stop blocking
-        self.ready_to_handle_new_audio.set()
+        try:
+            # process text in main thread
+            print(f"\n[Voice Command]: {text}")
+            self.handle_text_event(text)
+        finally:
+            # stop blocking
+            self.ready_to_handle_new_audio.set()
