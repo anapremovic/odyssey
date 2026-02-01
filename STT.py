@@ -4,17 +4,18 @@
 import speech_recognition as sr
 
 r = sr.Recognizer()
+mic = sr.Microphone(device_index=1)
 
-with sr.Microphone() as source:
+with mic as source:
     print("speak!")
     r.adjust_for_ambient_noise(source)
     audio = r.listen(source)
     print("audio captured...")
 
 try:
-    text = r.recognize_amazon(audio)
+    text = r.recognize_google(audio)
     print(text)
 except sr.UnknownValueError:
-    print("count not understand")
+    print("could not understand")
 except sr.RequestError as e:
     print("amazon could not process")
