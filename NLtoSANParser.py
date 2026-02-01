@@ -74,10 +74,18 @@ def detectSquare(words: list[str]) -> Optional[str]:
     rank = ''
 
     for word in words:
-        if word in phoneticFiles and not file:
-            file = phoneticFiles[word]
-        elif word in phoneticRanks and not rank:
-            rank = phoneticRanks[word]
+        # normalize token (strip punctuation)
+        token = re.sub(r'[^a-z0-9]', '', word.lower())
+        if token in phoneticFiles and not file:
+            file = phoneticFiles[token]
+        elif token in phoneticRanks and not rank:
+            rank = phoneticRanks[token]
+        # also accept direct single-letter files like 'a'..'h'
+        elif token in validFiles and not file:
+            file = token
+        # and direct numeric ranks like '1'..'8'
+        elif token in validRanks and not rank:
+            rank = token
 
     
     if file and rank:
