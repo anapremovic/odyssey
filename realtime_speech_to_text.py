@@ -11,7 +11,7 @@ class SpeechToText:
         self.microphone = sr.Microphone(device_index=self.get_snowball_microphone_index(),
                                         sample_rate=16000,
                                         chunk_size=1024)
-        self.model = WhisperModel("tiny", device="cpu")
+        self.fallback_model = WhisperModel("tiny", device="cpu")
 
     def get_snowball_microphone_index(self) -> Optional[int]:
         for index, name in enumerate(sr.Microphone.list_microphone_names()):
@@ -33,15 +33,25 @@ class SpeechToText:
 
     def background_thread_speech_to_text(self, recognizer: sr.Recognizer, audio: sr.AudioData) -> None:
         try:
+            text: str = self.recognizer.recognize_google(audio)
+            print(f"\n[Voice Command]: {text}")
+        except sr.UnknownValueError:
+            print("Could not parse")
+        except sr.RequestError as e:
+            print(f"Google Speech to Text failed: {e}, fall back to local Whisper")
+            self.whisper_speech_to_text(audio)
+
+    def whisper_speech_to_text(self, audio: sr.AudioData) -> None:
+        try:
             audio_data = audio.get_raw_data(convert_rate=16000)
             audio_array = np.frombuffer(audio_data, dtype=np.int16).astype(np.float32) / 32768.0
-            transcribed_audio_data, _ = self.model.transcribe(audio_array, language="en")
+            transcribed_audio_data, _ = self.fallback_model.transcribe(audio_array, language="en")
             text = " ".join(part.text for part in transcribed_audio_data).strip()
             print(f"\n[Voice Command]: {text}")
         except sr.UnknownValueError:
-            print("No words parsed")
+            print("Could not parse")
         except sr.RequestError as e:
-            print(f"STT Service error: {e}")
+            print(f"Speech to Text Service error: {e}")
 
 
 if __name__ == "__main__":
