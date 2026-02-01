@@ -21,7 +21,8 @@ def speak_text(text, output_file="speech_output.wav", emotion_level=0.4):
             similarity_boost=0.75,
             style=0.3,
             use_speaker_boost=True
-        )
+        ),
+        output_format="pcm_44100"
     )
     
     with open(output_file, "wb") as f:
