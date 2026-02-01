@@ -18,11 +18,10 @@ def run_hall():
             return
         
         dictionaries = chess_engine.handle_user_move(user_move_san)
-        print(dictionaries)
 
         if isinstance(dictionaries, dict):
             halLine = DicttoVoiceLine(dictionaries)
-            print("hal says:\n", halLine)
+            print("HAL says:\n", halLine)
             text_to_speech.speak_text(halLine, "HAL_speech_output.mp3")
             subprocess.run(['mpg123', 'HAL_speech_output.mp3'])
 
