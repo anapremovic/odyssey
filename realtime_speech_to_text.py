@@ -7,7 +7,7 @@ class SpeechToText:
     def __init__(self) -> None:
         self.recognizer = sr.Recognizer()
         self.microphone = sr.Microphone(device_index=self.get_snowball_microphone_index(),
-                                        sample_rate=48000,
+                                        sample_rate=16000,
                                         chunk_size=1024)
 
     def get_snowball_microphone_index(self) -> Optional[int]:
