@@ -22,7 +22,7 @@ def speak_text(text, output_file="speech_output.wav", emotion_level=0.4):
             style=0.3,
             use_speaker_boost=True
         ),
-        output_format="pcm_44100"
+        output_format="pcm_32000"
     )
     
     with open(output_file, "wb") as f:
