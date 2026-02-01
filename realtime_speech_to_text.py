@@ -1,3 +1,12 @@
+# ----------------------- SILENCE ALSA / JACK ERRORS -----------------------
+import os
+
+devnull = os.open(os.devnull, os.O_WRONLY)
+os.dup2(devnull, 2)
+os.close(devnull)
+os.environ["JACK_NO_START_SERVER"] = "1"
+# ---------------------------------------------------------------------------
+
 import speech_recognition as sr
 import time
 from typing import Callable, Optional
