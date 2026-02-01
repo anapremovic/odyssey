@@ -8,6 +8,12 @@ def run_hall():
     chess_engine = ChessGame()
     def process_one_turn(text: str) -> None:
         user_move_san = parse(text)
+        print(f"Parsed {user_move_san}")
+
+        if user_move_san is None:
+            print("Could not parse")
+            return
+        
         dictionaries = chess_engine.handle_user_move(user_move_san)
         print(dictionaries)
 
